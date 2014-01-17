@@ -1,0 +1,20 @@
+results_directory: "spec/support/results"
+scripts_directory: "spec/support/scripts"
+
+domain_under_test: "http://www.google.com"
+
+paths_to_capture:
+  home: "/"
+
+scripts_to_execute:
+  - "google_search.rb"
+
+browsers:
+  - "firefox"
+  - "chrome"
+
+browser_widths: 
+  - 1024
+  - 600
+
+image_fuzzing: "20%"
