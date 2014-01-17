@@ -1,6 +1,7 @@
 *.gem
 *.rbc
 *.png
+*_data.txt
 .bundle
 .config
 .yardoc
