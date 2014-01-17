@@ -8,8 +8,8 @@ module Goggles
     images = Dir.glob("#{@goggles_result_dir}/*/*.png").sort
 
     until images.empty?
-      one = images.slice(0)
-      two = images.slice(0)
+      one = images.slice!(0)
+      two = images.slice!(0)
 
       out_path = one.dup
       discard = out_path.slice!(/[^_]*$/)
