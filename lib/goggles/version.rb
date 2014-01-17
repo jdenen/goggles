@@ -1,0 +1,3 @@
+module Goggles
+  VERSION = "0.0.1"
+end
