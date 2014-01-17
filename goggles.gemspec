@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Goggles::VERSION
   spec.authors       = ["Johnson Denen"]
   spec.email         = ["jdenen@manta.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{responsive screenshot comparisons under watir-webdriver}
+  spec.description   = %q{responsive screenshot comparisons under watir-webdriver}
+  spec.homepage      = "http://github.com/jdenen/goggles"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -20,4 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "cucumber"
+
+  spec.add_runtime_dependency "watir-webdriver"
+  spec.add_runtime_dependency "image_size"
 end
