@@ -17,7 +17,7 @@ module Goggles
       diff_out = "#{out_path}diff.png"
       data_out = "#{out_path}data.txt"
 
-      `compare -fuzz #{@goggles_fuzz} -metric AE -highlight-color blue #{one} #{two} #{diff_out} 2> #{data_out}`
+      `compare -fuzz #{@goggles_fuzz} -metric AE -highlight-color blue #{one} #{two} #{diff_out} 2>#{data_out}`
     end
   end
 
