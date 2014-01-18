@@ -52,13 +52,18 @@ module Goggles
           @gg_label = label
           url = "#{@goggles_domain}#{path}"
 
-          @goggles_scripts.each do |script|
-            script_name = script.gsub(/\/(.*)\//, '').gsub('.rb', '')
-            script = "#{@goggles_script_dir}/#{script}"
+          if @goggles_scripts.nil?
+            @watir.goto url
+            grab_screenshot("screenshot")
+          else
+            @goggles_scripts.each do |script|
+              script_name = script.gsub(/\/(.*)\//, '').gsub('.rb', '')
+              script = "#{@goggles_script_dir}/#{script}"
 
-            execute_script(url, script)
+              execute_script(url, script)
 
-            grab_screenshot(script_name)
+              grab_screenshot(script_name)
+            end
           end
         end
 
