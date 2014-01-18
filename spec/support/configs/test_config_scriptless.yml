@@ -5,9 +5,9 @@ domain_under_test: "http://www.google.com"
 
 paths_to_capture:
   home: "/"
+  email: "/gmail"
 
 scripts_to_execute:
-  - "google_search.rb"
 
 browsers:
   - "firefox"
