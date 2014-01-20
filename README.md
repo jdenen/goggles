@@ -73,9 +73,9 @@ require 'goggles'
 Goggles.grab_screenshot("with_cookie_set")
 ```
 
-Execute a goggles test through the command line with `swim`. Pass your configuration file to the command to execute that set of parameters.
+Execute a goggles test through the command line with `swim --config CONFIG_FILE` or see your options with `swim --help`.
 
-    $ swim config.yml
+    $ swim -c config.yml
 
 ## Contributing
 
