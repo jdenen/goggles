@@ -1,4 +1,5 @@
 # goggles
+[![Gem Version](https://badge.fury.io/rb/goggles.png)](http://badge.fury.io/rb/goggles)
 
 Goggles is a visual testing tool inspired by [wraith](http://github.com/bbc-news/wraith) and powered by [watir-webdriver](http://github.com/watir/watir-webdriver). It allows you to compare screenshots of your web application in different browsers, and you can execute Ruby scripts to setup as many screenshots as you need.
 
