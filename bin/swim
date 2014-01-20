@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'goggles/cli'
+
+Goggles::CLI.new ARGV
