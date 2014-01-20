@@ -82,6 +82,12 @@ Execute a goggles test through the command line with `swim --config CONFIG_FILE`
 
 1. Fork it ( http://github.com/jdenen/goggles/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+3. Code until specs pass (`rspec`)*
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request
+
+\*Chrome and [ChromeDriver](http://code.google.com/p/selenium/wiki/ChromeDriver) are required to pass specs. Download the latest version and add it to your PATH before running `rspec`.
+
+## Questions, Comments, Concerns
+Easiest place to reach me is Twitter, [@jpdenen](http://twitter.com/jpdenen)
