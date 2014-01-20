@@ -7,6 +7,8 @@ module Goggles
 
     images = Dir.glob("#{@goggles_result_dir}/*/*.png").sort
 
+    raise Goggles::EmptyResultError, "No screenshots found in results directory: #{@goggles_result_dir}" if images.empty?
+
     until images.empty?
       one = images.slice!(0)
       two = images.slice!(0)
