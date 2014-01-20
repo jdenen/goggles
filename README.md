@@ -1,13 +1,6 @@
 # goggles
 
-Goggles is a visual testing tool inspired by [wraith](http://github.com/bbc-news/wraith) and powered by [watir-webdriver](http://github.com/watir/watir-webdriver). It was created for a few itches wraith couldn't quite scratch:
-
-* easy to integrate into your test suite
-* configurable at a project level (as opposed to the gem level)
-* scriptable in Ruby
-* less Rake dependent
-
-Choose your browsers and their sizes, what domain and paths to test, and any scripts to execute during those tests. Pass your choices through a config file, and let goggles do the rest.
+Goggles is a visual testing tool inspired by [wraith](http://github.com/bbc-news/wraith) and powered by [watir-webdriver](http://github.com/watir/watir-webdriver). It allows you to compare screenshots of your web application in different browsers, and you can execute Ruby scripts to setup as many screenshots as you need.
 
 ## Installation
 
@@ -30,54 +23,60 @@ Or install it yourself with:
 
 ## Usage
 
-Create a config file to point goggles in the right direction:
+Create a config file to point goggles in the right direction.
 ``` yaml
 # config.yaml
-results_directory: "/dir/where/you/output"
 
-scripts_directory: "/dir/housing/scripts/to/be/executed"
+# Directory where you want to store your results. Required.
+results_directory: "/home/results"
 
+# Directory where you're storing your scripts. Required if you're specify scripts below.
+scripts_directory: "/home/scripts"
+
+# Scripts to execute in the scripts directory. Optional.
 scripts_to_execute:
-  - "ruby_scripts.rb"
-  - "you_want_to.rb"
-  - "execute_as_part_of_testing.rb"
+  - "search.rb"
+  - "login.rb"
 
-domain_under_test: "www.test-me.com"
+# Domain to test. Required.
+domain_under_test: "http://www.manta.com"
 
+# Paths to pages you want to test. Label them with a page name. Required.
 paths_to_capture: 
-  page_name: "/page/path"
+  - "/"
+  - "/mb"
 
+# Browsers you want to compare. Cannot specify more than two (yet). Required.
 browsers:
   - "chrome"
   - "firefox"
 
+# Widths at which you would like screenshots compared. All screenshots will be taken at a height of 768. Required.
 browser_widths:
   - 1024
   - 600
   - 320
-  
+
+# Fuzzing percentage. Play around with this to find the right fit. Required.
 image_fuzzing: "20%"
 ```
 
-Create scripts to execute as part of your testing. Set cookies, use your page objects, take actions, etc. Goggles will always take a screenshot at the end of a script, but you can take extras as part of your scripting. Just pass a short description to the `#grab_screenshot` method. I've tried to keep variable names as unlikely to interrupt your code as possible, but `@watir` is reserved for the browser instance currently executing scripts.
+If you pass scripts to goggles as part of your testing, you **must** specify when screenshots should be taken with the `#grab_screenshot` method. Otherwise, goggles will open each of your paths and take a screenshot.
+
+NOTE: I've tried to keep variable names as unlikely to interrupt your code as possible, but `@watir` is reserved for the browser instance currently executing scripts.
 
 ``` ruby
 # script_to_execute.rb
 require 'goggles'
+@watir.cookies.add("cookie_name", "cookie_value")
 
-@watir.cookies.add("login_session", "encoded_login_information")
-
-# Take screenshot for comparison with Goggles
-Goggles.grab_screenshot("pre_button_click")
-
-@watir.button(:id => "button-id").click
+# Pass a short description to the method for naming the resultant screenshot
+Goggles.grab_screenshot("with_cookie_set")
 ```
 
-Finally, pass your config file path to goggles through the `#swim` method to kick the process off. Screenshots will be taken according to the scripts you've specified via configuration, and diff'd screenshots will be generated. The method will also return a hash with each comparison key pointing to relevant diff data (useful for determining pass/fail).
+Execute a goggles test through the command line with `swim`. Pass your configuration file to the command to execute that set of parameters.
 
-``` ruby
-Goggles.swim("path/to/config.yml")
-```
+    $ swim config.yml
 
 ## Contributing
 
