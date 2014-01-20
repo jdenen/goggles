@@ -26,11 +26,10 @@ Or install it yourself with:
 Create a config file to point goggles in the right direction.
 ``` yaml
 # config.yaml
-
 # Directory where you want to store your results. Required.
 results_directory: "/home/results"
 
-# Directory where you're storing your scripts. Required if you're specify scripts below.
+# Directory where you're storing your scripts. Optional.
 scripts_directory: "/home/scripts"
 
 # Scripts to execute in the scripts directory. Optional.
@@ -43,8 +42,8 @@ domain_under_test: "http://www.manta.com"
 
 # Paths to pages you want to test. Label them with a page name. Required.
 paths_to_capture: 
-  - "/"
-  - "/mb"
+  home: "/"
+  search: "/mb"
 
 # Browsers you want to compare. Cannot specify more than two (yet). Required.
 browsers:
