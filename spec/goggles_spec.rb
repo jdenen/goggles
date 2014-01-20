@@ -10,31 +10,24 @@ describe Goggles do
     describe "taking screenshots" do
       Given(:sizes_config) { "#{config_path}/test_config_1024_600.yml" }
       When { Goggles.swim(sizes_config) }
-      Then { images.size.should == 12 }
+      Then { images.size.should == 6 }
+      And { diffs.size.should == 2 }
+      And { datas.size.should == 2 }
     end
 
-    describe "generating diff images" do
-      Then { diffs.size.should == 4 }
-    end
-
-    describe "generating diff data" do
-      Then { datas.size.should == 4 }
+    describe "generating error" do
+      Given(:no_shot_config) { "#{config_path}/test_config_no_screenshot.yml" }
+      Then { expect{ Goggles.swim(no_shot_config) }.to raise_error(Goggles::EmptyResultError) }
     end
   end
 
-  context "swimming against multiple paths without a script" do
-    describe "taking screenshots" do
+  context "swimming against multiple paths with no scripts" do
+    describe "taking screenshots when commanded" do
       Given(:scriptless_config) { "#{config_path}/test_config_scriptless.yml" }
       When { Goggles.swim(scriptless_config) }
       Then { images.size.should == 6 }
-    end
-
-    describe "generating diff images" do
-      Then { diffs.size.should == 2 }
-    end
-
-    describe "generating diff data" do
-      Then { datas.size.should == 2 }
+      And { diffs.size.should == 2 }
+      And { datas.size.should == 2 }
     end
   end
 
