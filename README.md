@@ -24,27 +24,30 @@ Or install it yourself with:
 
 ## Usage
 
-Create a config file to point goggles in the right direction.
+Generate a config file with `swim --init` to point goggles in the right direction.
+
+    $ swim -i /home/configs/config.yaml
+
 ``` yaml
 # config.yaml
 # Directory where you want to store your results. Required.
-results_directory: "/home/results"
+results_directory: "/home/example/results"
 
 # Directory where you're storing your scripts. Optional.
-scripts_directory: "/home/scripts"
+scripts_directory: "/home/example/scripts"
 
 # Scripts to execute in the scripts directory. Optional.
 scripts_to_execute:
-  - "search.rb"
-  - "login.rb"
+  - "first_script.rb"
+  - "second_script.rb"
 
 # Domain to test. Required.
-domain_under_test: "http://www.manta.com"
+domain_under_test: "http://www.google.com"
 
 # Paths to pages you want to test. Label them with a page name. Required.
 paths_to_capture: 
   home: "/"
-  search: "/mb"
+  gmail: "/gmail"
 
 # Browsers you want to compare. Cannot specify more than two (yet). Required.
 browsers:
@@ -54,14 +57,12 @@ browsers:
 # Widths at which you would like screenshots compared. All screenshots will be taken at a height of 768. Required.
 browser_widths:
   - 1024
-  - 600
-  - 320
 
 # Fuzzing percentage. Play around with this to find the right fit. Required.
 image_fuzzing: "20%"
 ```
 
-If you pass scripts to goggles as part of your testing, you **must** specify when screenshots should be taken with the `#grab_screenshot` method. Otherwise, goggles will open each of your paths and take a screenshot.
+If you pass scripts to goggles as part of your testing, you **must** specify when screenshots should be taken with the `#grab_screenshot` method. If you do not specify scripts in configuration, goggles will open each of your paths and take a screenshot.
 
 NOTE: I've tried to keep variable names as unlikely to interrupt your code as possible, but `@watir` is reserved for the browser instance currently executing scripts.
 
