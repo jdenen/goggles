@@ -9,6 +9,7 @@ Install ImageMagick:
 
 * OSX: `$ brew install imagemagick`
 * Linux: `$ sudo apt-get install imagemagick`
+* Windows: [Download](http://www.imagemagick.org/script/binary-releases.php#windows) installer and add to your PATH.
 
 Add this line to your application's Gemfile:
 
