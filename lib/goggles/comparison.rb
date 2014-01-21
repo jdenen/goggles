@@ -5,9 +5,9 @@ module Goggles
   def diff_images
     size_to_smallest!
 
-    images = Dir.glob("#{@goggles_result_dir}/*/*.png").sort
+    images = Dir.glob("#{@gg_result_dir}/*/*.png").sort
 
-    raise Goggles::EmptyResultError, "No screenshots found in results directory: #{@goggles_result_dir}" if images.empty?
+    raise Goggles::EmptyResultError, "No screenshots found in results directory: #{@gg_result_dir}" if images.empty?
 
     until images.empty?
       one = images.slice!(0)
@@ -19,12 +19,12 @@ module Goggles
       diff_out = "#{out_path}diff.png"
       data_out = "#{out_path}data.txt"
 
-      `compare -fuzz #{@goggles_fuzz} -metric AE -highlight-color blue #{one} #{two} #{diff_out} 2>#{data_out}`
+      `compare -fuzz #{@gg_fuzz} -metric AE -highlight-color blue #{one} #{two} #{diff_out} 2>#{data_out}`
     end
   end
 
   def size_to_smallest!
-    images = Dir.glob("#{@goggles_result_dir}/*/*.png").sort
+    images = Dir.glob("#{@gg_result_dir}/*/*.png").sort
 
     until images.empty?
       one = images.slice!(0)
