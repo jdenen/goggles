@@ -31,4 +31,11 @@ describe Goggles do
     end
   end
 
+  describe "creating empty configuration with --init" do
+    Given(:conf) { "spec/support/configs/empty_config.yml" }
+    Given { FileUtils.rm_f conf }
+    When { `swim -i #{conf}` }
+    Then { File.exists?(conf).should be_true }
+  end
+
 end
