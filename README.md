@@ -61,6 +61,9 @@ browser_widths:
 
 # Fuzzing percentage. Play around with this to find the right fit. Required.
 image_fuzzing: "20%"
+
+# Color for diffing images. Defaults to blue. Optional.
+diff_color: "blue"
 ```
 
 If you pass scripts to goggles as part of your testing, you **must** specify when screenshots should be taken with the `#grab_screenshot` method. If you do not specify scripts in configuration, goggles will open each of your paths and take a screenshot.
