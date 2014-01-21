@@ -21,6 +21,7 @@ module Goggles
     @gg_platforms = conf['browsers']
     @gg_widths = conf['browser_widths']
     @gg_fuzz = conf['image_fuzzing']
+    @gg_color = conf['diff_color'] || 'blue'
 
     embark!
     diff_images

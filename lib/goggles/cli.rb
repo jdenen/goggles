@@ -53,7 +53,8 @@ module Goggles
       'paths_to_capture' => { 'home' => "/", 'gmail' => "/gmail" },
       'browsers' => ["chrome", "firefox"],
       'browser_widths' => [1024, 600],
-      'image_fuzzing' => "20%"
+      'image_fuzzing' => "20%",
+      'diff_color' => "blue"
     }
   end
 end
