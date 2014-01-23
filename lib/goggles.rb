@@ -1,6 +1,5 @@
 require "goggles/version"
 require "goggles/comparison"
-require "goggles/scripter"
 require "goggles/error"
 
 require "watir-webdriver"
