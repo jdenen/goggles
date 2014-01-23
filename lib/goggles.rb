@@ -52,15 +52,15 @@ module Goggles
 
         @gg_paths.each do |label, path|
           @gg_label = label
-          url = "#{@gg_domain}#{path}"
+          @gg_url = "#{@gg_domain}#{path}"
 
           if @gg_scripts.nil?
-            @watir.goto url
+            @watir.goto @gg_url
             grab_screenshot("screenshot")
           else
             @gg_scripts.each do |script|
               script = "#{@gg_script_dir}/#{script}"
-              execute_script(url, script)
+              execute_script(@gg_url, script)
             end
           end
         end
