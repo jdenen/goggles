@@ -60,7 +60,8 @@ module Goggles
           else
             @gg_scripts.each do |script|
               script = "#{@gg_script_dir}/#{script}"
-              execute_script(@gg_url, script)
+              @watir.goto @gg_url
+              eval(File.read(script))
             end
           end
         end
