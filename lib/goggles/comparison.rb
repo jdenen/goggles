@@ -3,18 +3,16 @@ require "image_size"
 module Goggles
 
   def diff_images
-    size_to_smallest!
-
     images = Dir.glob("#{@gg_result_dir}/*/*.png").sort
-
     raise Goggles::EmptyResultError, "No screenshots found in results directory: #{@gg_result_dir}" if images.empty?
+
+    size_to_smallest!
 
     until images.empty?
       one = images.slice!(0)
       two = images.slice!(0)
 
-      out_path = one.dup
-      discard = out_path.slice!(/[^_]*$/)
+      out_path = one.gsub(/[^_]*$/, '')
 
       diff_out = "#{out_path}diff.png"
       data_out = "#{out_path}data.txt"
@@ -27,49 +25,26 @@ module Goggles
     images = Dir.glob("#{@gg_result_dir}/*/*.png").sort
 
     until images.empty?
-      one = images.slice!(0)
-      two = images.slice!(0)
+      pair = images.slice!(0..1)
+      widths = []
+      heights = []
 
-      File.open(one, 'rb') do |file_one|
-        size_one = ImageSize.new(file_one.read).size
-        first_width = size_one[0]
-        first_height = size_one[1]
+      File.open(pair[0], 'rb') do |one|
+        size = ImageSize.new(one.read).size
+        widths << size[0]
+        heights << size[1]
 
-        File.open(two, 'rb') do |file_two|
-          size_two = ImageSize.new(file_two.read).size
-          second_width = size_two[0]
-          second_height = size_two[1]
+        File.open(pair[1], 'rb') do |two|
+          size = ImageSize.new(two.read).size
+          widths << size[0]
+          heights << size[1]
 
-          if first_width > second_width
-            width = second_width
-            w_file = one
-          else 
-            width = first_width
-            w_file = two
+          pair.each do |file|
+            `convert #{file} -background none -extent #{widths.sort[0]}x#{heights.sort[0]} #{file}`
           end
-
-          if first_height > second_height
-            height = second_height
-            h_file = one
-          else
-            height = first_height
-            h_file = two
-          end
-
-          cut_to_width(w_file, width)
-          cut_to_height(h_file, height)
-
         end
       end
     end
-  end
-
-  def cut_to_width(file, w)
-    `convert #{file} -background none -extent #{w}x0 #{file}`
-  end
-
-  def cut_to_height(file, h)
-    `convert #{file} -background none -extent 0x#{h} #{file}`
   end
 
 end
