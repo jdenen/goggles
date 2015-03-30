@@ -16,8 +16,20 @@ describe Goggles do
   end
 
   describe ".each" do
+    it "yields browser and browser width" do
+      chrome = double("chrome")
+      width  = double("width")
+      
+      Goggles.configure do |config| 
+        config.browser = chrome
+        config.size    = width
+      end
+      
+      expect { |b| Goggles.each &b }.to yield_with_args chrome, width
+    end
+    
     it "returns a comparison object" do
-      expect(Goggles.each).to be_a Goggles::Comparison
+      expect(Goggles.each { "foo" }).to be_a Goggles::Comparison
     end
   end
 end
