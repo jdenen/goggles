@@ -9,5 +9,9 @@ describe Goggles do
     it "returns a configuration object" do
       expect(Goggles.configure { "foo" }).to be_a Goggles::Configuration
     end
+
+    it "memoizes the configuration object" do
+      expect(Goggles.configure { "foo" }).to equal Goggles.configure { "bar" }
+    end
   end
 end
