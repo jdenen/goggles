@@ -18,17 +18,16 @@ describe Goggles do
   describe ".each" do
     let(:chrome){ double "chrome" }
     let(:firefox){ double "firefox" }
-    let(:width){ double "width" }
 
     before do
       Goggles.configure do |config| 
         config.browsers = [chrome]
-        config.size     = width
+        config.sizes    = [500]
       end
     end
     
     it "yields browser and browser width" do
-      expect { |b| Goggles.each &b }.to yield_with_args chrome, width
+      expect { |b| Goggles.each &b }.to yield_with_args chrome, 500
     end
     
     it "returns a comparison object" do
@@ -38,7 +37,17 @@ describe Goggles do
     context "when configured for browsers at one size" do
       it "yields each browser with the width" do
         Goggles.configure { |config| config.browsers << firefox }
-        expect{ |b| Goggles.each &b }.to yield_successive_args [chrome,width], [firefox,width]
+        expect{ |b| Goggles.each &b }.to yield_successive_args [chrome, 500], [firefox, 500]
+      end
+    end
+
+    context "when configured for browsers at different sizes" do
+      it "yields every browser and width combination" do
+        Goggles.configure do |config|
+          config.browsers << firefox
+          config.sizes << 1000 
+        end
+        expect{ |b| Goggles.each &b }.to yield_successive_args [chrome, 500], [chrome, 1000], [firefox, 500], [firefox, 1000]
       end
     end
   end
