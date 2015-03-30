@@ -36,12 +36,14 @@ describe Goggles do
     context "when configured for browsers at one size" do
       it "creates an iteration for each browser with the width" do
         Goggles.configure do |conf|
-          conf.browsers = [chrome, firefox]
+          conf.browsers = [:foo, :bar]
           conf.sizes    = [500]
         end
-        
-        expect(Goggles::Iteration).to receive(:new).with chrome, 500, Goggles::Configuration
-        expect(Goggles::Iteration).to receive(:new).with firefox, 500, Goggles::Configuration
+
+        [:foo, :bar].each do |browser|
+          expect(Goggles::Iteration).to receive(:new).with browser, 500, Object
+        end
+
         Goggles.each { "foo" }
       end
     end
@@ -49,14 +51,14 @@ describe Goggles do
     context "when configured for browsers at different sizes" do
       it "creates an iteration for every browser and width combination" do
         Goggles.configure do |conf|
-          conf.browsers = [chrome, firefox]
+          conf.browsers = [:foo, :bar]
           conf.sizes    = [500, 1000]
         end
-        
-        expect(Goggles::Iteration).to receive(:new).with chrome, 500, Goggles::Configuration
-        expect(Goggles::Iteration).to receive(:new).with chrome, 1000, Goggles::Configuration
-        expect(Goggles::Iteration).to receive(:new).with firefox, 500, Goggles::Configuration
-        expect(Goggles::Iteration).to receive(:new).with firefox, 1000, Goggles::Configuration
+
+        [:foo, :bar].product([500, 1000]).each do |browser, width|
+          expect(Goggles::Iteration).to receive(:new).with browser, width, Object
+        end
+
         Goggles.each { "foo" }
       end
     end
