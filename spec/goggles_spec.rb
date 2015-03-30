@@ -24,7 +24,7 @@ describe Goggles do
     end
 
     before do
-      allow(config).to receive_messages(:directory => "/dir", :fuzzing => "20%", :color => "blue")
+      allow(config).to receive_messages(directory: "/dir", fuzzing: "20%", color: "blue", groups: [])
     end
     
     it "passes browser, width, and configuration to an iteration object" do
