@@ -1,5 +1,6 @@
 require "goggles/configuration"
 require "goggles/comparison"
+require "goggles/iteration"
 
 module Goggles
   extend self
@@ -10,9 +11,9 @@ module Goggles
 
   def each &block
     configuration.browsers.each do |browser|
-      configuration.sizes.each { |size| yield browser, size }
+      configuration.sizes.each { |size| Iteration.new browser, size, configuration, &block }
     end
-    Goggles::Comparison.new
+    Comparison.new
   end
 
   private

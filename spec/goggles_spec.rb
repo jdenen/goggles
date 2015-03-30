@@ -18,16 +18,15 @@ describe Goggles do
   describe ".each" do
     let(:chrome){ double "chrome" }
     let(:firefox){ double "firefox" }
-
-    before do
-      Goggles.configure do |config| 
-        config.browsers = [chrome]
-        config.sizes    = [500]
-      end
-    end
     
-    it "yields browser and browser width" do
-      expect { |b| Goggles.each &b }.to yield_with_args chrome, 500
+    it "passes browser, width, and configuration to an iteration object" do
+      config = Goggles.configure do |conf|
+        conf.browsers = [chrome]
+        conf.sizes    = [500]
+      end
+      
+      expect(Goggles::Iteration).to receive(:new).with(chrome, 500, config)
+      Goggles.each { "foo" }
     end
     
     it "returns a comparison object" do
@@ -35,19 +34,30 @@ describe Goggles do
     end
 
     context "when configured for browsers at one size" do
-      it "yields each browser with the width" do
-        Goggles.configure { |config| config.browsers << firefox }
-        expect{ |b| Goggles.each &b }.to yield_successive_args [chrome, 500], [firefox, 500]
+      it "creates an iteration for each browser with the width" do
+        Goggles.configure do |conf|
+          conf.browsers = [chrome, firefox]
+          conf.sizes    = [500]
+        end
+        
+        expect(Goggles::Iteration).to receive(:new).with chrome, 500, Goggles::Configuration
+        expect(Goggles::Iteration).to receive(:new).with firefox, 500, Goggles::Configuration
+        Goggles.each { "foo" }
       end
     end
 
     context "when configured for browsers at different sizes" do
-      it "yields every browser and width combination" do
-        Goggles.configure do |config|
-          config.browsers << firefox
-          config.sizes << 1000 
+      it "creates an iteration for every browser and width combination" do
+        Goggles.configure do |conf|
+          conf.browsers = [chrome, firefox]
+          conf.sizes    = [500, 1000]
         end
-        expect{ |b| Goggles.each &b }.to yield_successive_args [chrome, 500], [chrome, 1000], [firefox, 500], [firefox, 1000]
+        
+        expect(Goggles::Iteration).to receive(:new).with chrome, 500, Goggles::Configuration
+        expect(Goggles::Iteration).to receive(:new).with chrome, 1000, Goggles::Configuration
+        expect(Goggles::Iteration).to receive(:new).with firefox, 500, Goggles::Configuration
+        expect(Goggles::Iteration).to receive(:new).with firefox, 1000, Goggles::Configuration
+        Goggles.each { "foo" }
       end
     end
   end
