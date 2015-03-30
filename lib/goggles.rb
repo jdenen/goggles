@@ -3,7 +3,7 @@ require "goggles/configuration"
 module Goggles
   class << self
     def configure &block
-      yield Goggles::Configuration.new
+      Goggles::Configuration.new.tap { |conf| yield conf }
     end
   end
 end
