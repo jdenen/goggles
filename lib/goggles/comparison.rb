@@ -17,6 +17,8 @@ module Goggles
     def cut_to_common_size
       groups.each_with_object([]) do |group, array|
         collection = find_comparable group
+        collection.each do |img|
+        end
       end
     end
 

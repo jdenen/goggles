@@ -36,8 +36,16 @@ describe Goggles::Comparison do
     end
 
     it "collects comparable screenshots" do
-      expect(comparison).to receive(:find_comparable).with(1)
-      expect(comparison).to receive(:find_comparable).with(2)
+      expect(comparison).to receive(:find_comparable).with(1).and_return([])
+      expect(comparison).to receive(:find_comparable).with(2).and_return([])
+      comparison.cut_to_common_size
+    end
+    
+    it "iterates over collected screenshots" do
+      screens = instance_double "[screenshots]"
+      expect(comparison).to receive(:groups).and_return ["foo"]
+      expect(comparison).to receive(:find_comparable).and_return screens
+      expect(screens).to receive(:each)
       comparison.cut_to_common_size
     end
   end
