@@ -9,7 +9,7 @@ module Goggles
   end
 
   def each &block
-    yield configuration.browser, configuration.size
+    configuration.browsers.each { |browser| yield browser, configuration.size }
     Goggles::Comparison.new
   end
 

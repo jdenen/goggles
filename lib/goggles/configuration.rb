@@ -1,9 +1,9 @@
 module Goggles
   class Configuration
-    attr_accessor :browser, :size
+    attr_accessor :browsers, :size
 
     def initialize
-      @browser = nil
+      @browsers = []
       @size    = nil
     end
   end
