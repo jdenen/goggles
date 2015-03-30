@@ -10,9 +10,10 @@ module Goggles
   end
 
   def each &block
-    configuration.browsers.each do |browser|
-      configuration.sizes.each { |size| Iteration.new browser, size, configuration, &block }
+    configuration.browsers.product(configuration.sizes).each do |browser, size|
+      Iteration.new browser, size, configuration, &block 
     end
+    
     Comparison.new
   end
 
