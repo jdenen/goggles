@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Goggles do
-  describe "#config" do
+  describe ".configure" do
     it "yields a configuration object" do
       expect { |b| Goggles.configure &b }.to yield_with_args Goggles::Configuration
     end
@@ -12,6 +12,12 @@ describe Goggles do
 
     it "memoizes the configuration object" do
       expect(Goggles.configure { "foo" }).to equal Goggles.configure { "bar" }
+    end
+  end
+
+  describe ".each" do
+    it "returns a comparison object" do
+      expect(Goggles.each).to be_a Goggles::Comparison
     end
   end
 end
