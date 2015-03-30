@@ -22,6 +22,10 @@ describe Goggles do
         conf.sizes    = [500]
       end
     end
+
+    before do
+      allow(config).to receive_messages(:directory => "/dir", :fuzzing => "20%", :color => "blue")
+    end
     
     it "passes browser, width, and configuration to an iteration object" do
       expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)

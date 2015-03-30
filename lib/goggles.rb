@@ -14,7 +14,7 @@ module Goggles
       Iteration.new browser, size, configuration, &block 
     end
     
-    Comparison.new
+    Comparison.new configuration
   end
 
   private
