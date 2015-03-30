@@ -23,6 +23,4 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "watir-webdriver"
   spec.add_runtime_dependency "image_size"
-
-  spec.executables << "swim"
 end
