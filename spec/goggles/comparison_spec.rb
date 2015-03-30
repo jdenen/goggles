@@ -9,7 +9,7 @@ describe Goggles::Comparison do
                        directory: "dir",
                        fuzzing: "20%",
                        color: "blue",
-                       groups: [1, 2])
+                       groups: [1])
   end
 
   it "reads attributes from a given configuration object" do
@@ -36,17 +36,28 @@ describe Goggles::Comparison do
     end
 
     it "collects comparable screenshots" do
+      expect(comparison).to receive(:groups).and_return [1, 2]
       expect(comparison).to receive(:find_comparable).with(1).and_return([])
       expect(comparison).to receive(:find_comparable).with(2).and_return([])
       comparison.cut_to_common_size
     end
-    
-    it "iterates over collected screenshots" do
-      screens = instance_double "[screenshots]"
-      expect(comparison).to receive(:groups).and_return ["foo"]
-      expect(comparison).to receive(:find_comparable).and_return screens
-      expect(screens).to receive(:each)
-      comparison.cut_to_common_size
+
+    context "with collection of comparable screenshots" do
+      it "iterates over the collection" do
+        screens = instance_double "[screenshots]"
+        expect(comparison).to receive(:groups).and_return ["foo"]
+        expect(comparison).to receive(:find_comparable).and_return screens
+        expect(screens).to receive(:each)
+        comparison.cut_to_common_size
+      end
+    end
+
+    context "while iterating over collected comparable images" do
+      it "opens each image in binary mode" do
+        expect(comparison).to receive(:find_comparable).and_return [:foo]
+        expect(File).to receive(:open).with(:foo, 'rb')
+        comparison.cut_to_common_size
+      end
     end
   end
 end

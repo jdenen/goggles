@@ -18,6 +18,7 @@ module Goggles
       groups.each_with_object([]) do |group, array|
         collection = find_comparable group
         collection.each do |img|
+          File.open(img, 'rb'){ |file| }
         end
       end
     end
