@@ -2,7 +2,7 @@ require "watir-webdriver"
 
 module Goggles
   class Iteration
-    attr_reader :browser, :browser_name
+    attr_reader :browser, :browser_name, :size
     
     def initialize driver, width, config, &block
       @browser_name = driver
@@ -14,6 +14,7 @@ module Goggles
 
     def build_browser
       @browser = Watir::Browser.new browser_name
+      @browser.driver.manage.window.resize_to size, 768
     end
   end
 end
