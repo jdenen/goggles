@@ -70,9 +70,16 @@ describe Goggles::Comparison do
   end
 
   describe "#find_common_width" do
-    it "returns the smallest number from all first items in an array of arrays" do
+    it "returns the smallest number from first items in an array of arrays" do
       arrays = [[100,40], [68,300], [104,98]]
       expect(comparison.find_common_width arrays).to eq 68
+    end
+  end
+
+  describe "#find_common_height" do
+    it "returns the smallest number from second items in an array of arrays" do
+      arrays = [[100,40], [68,300], [104,98]]
+      expect(comparison.find_common_height arrays).to eq 40
     end
   end
 end

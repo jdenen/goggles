@@ -39,6 +39,10 @@ module Goggles
       array.collect(&:first).sort.first
     end
 
+    def find_common_height array
+      array.collect(&:last).sort.first
+    end
+
     private
 
     def read_size file
