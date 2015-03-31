@@ -48,6 +48,7 @@ describe Goggles::Comparison do
         expect(comparison).to receive(:groups).and_return ["foo"]
         expect(comparison).to receive(:find_comparable).and_return screens
         expect(screens).to receive(:each)
+        expect(comparison).to receive(:cut!).with(screens, [])
         comparison.cut_to_common_size
       end
     end
@@ -56,6 +57,7 @@ describe Goggles::Comparison do
       it "opens each image in binary mode" do
         expect(comparison).to receive(:find_comparable).and_return [:foo]
         expect(File).to receive(:open).with(:foo, 'rb')
+        expect(comparison).to receive(:cut!)
         comparison.cut_to_common_size
       end
     end
