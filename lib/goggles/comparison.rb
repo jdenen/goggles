@@ -35,6 +35,10 @@ module Goggles
     def cut! images, sizes
     end
 
+    def find_common_width array
+      array.collect(&:first).sort.first
+    end
+
     private
 
     def read_size file

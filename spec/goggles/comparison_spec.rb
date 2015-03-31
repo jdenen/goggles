@@ -68,4 +68,11 @@ describe Goggles::Comparison do
       expect(comparison.find_comparable "foo").to eq ["/foo_chrome.png", "/foo_ff.png"]
     end
   end
+
+  describe "#find_common_width" do
+    it "returns the smallest number from all first items in an array of arrays" do
+      arrays = [[100,40], [68,300], [104,98]]
+      expect(comparison.find_common_width arrays).to eq 68
+    end
+  end
 end
