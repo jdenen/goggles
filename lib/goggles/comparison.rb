@@ -17,13 +17,23 @@ module Goggles
     def cut_to_common_size
       groups.each_with_object([]) do |group, array|
         collection = find_comparable group
+        
         collection.each do |img|
-          File.open(img, 'rb'){ |file| }
+          File.open(img, 'rb'){ |file| array << read_size(file) }
         end
+
+        cut! collection, array
       end
     end
 
-    def find_comparable 
+    def find_comparable description
+      Dir.glob("#{directory}/*.png").sort.select { |img| img =~ /#{description}_/ }
+    end
+
+    def read_size file
+    end
+
+    def cut! images, sizes
     end
   end
 end

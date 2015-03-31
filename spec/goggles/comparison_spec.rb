@@ -60,4 +60,12 @@ describe Goggles::Comparison do
       end
     end
   end
+
+  describe "#find_comparable" do
+    it "returns an array of file paths" do
+      array = ["/foo_chrome.png", "/bar_chrome.png", "/foo_ff.png", "/bar_ff.png"]
+      expect(Dir).to receive(:glob).and_return array
+      expect(comparison.find_comparable "foo").to eq ["/foo_chrome.png", "/foo_ff.png"]
+    end
+  end
 end
