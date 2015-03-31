@@ -1,3 +1,5 @@
+require "image_size"
+
 module Goggles
   class Comparison
     attr_reader :directory, :fuzzing, :color, :groups
@@ -30,10 +32,13 @@ module Goggles
       Dir.glob("#{directory}/*.png").sort.select { |img| img =~ /#{description}_/ }
     end
 
-    def read_size file
+    def cut! images, sizes
     end
 
-    def cut! images, sizes
+    private
+
+    def read_size file
+      ImageSize.new(file.read).size
     end
   end
 end
