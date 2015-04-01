@@ -31,6 +31,11 @@ describe Goggles do
       expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
       Goggles.each { "foo" }
     end
+
+    it "accepts non-configured browser and size arguments" do
+      expect(Goggles::Iteration).to receive(:new).with(:bar, 300, config)
+      Goggles.each([:bar], [300]) { "foo" }
+    end
     
     it "returns a comparison object" do
       expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)

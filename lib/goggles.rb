@@ -9,10 +9,11 @@ module Goggles
     configuration.tap { |conf| yield conf }
   end
 
-  def each &block
-    configuration.browsers.product(configuration.sizes).each do |browser, size|
-      Iteration.new browser, size, configuration, &block 
-    end
+  def each browsers = nil, sizes = nil, &block
+    browsers ||= configuration.browsers
+    sizes    ||= configuration.sizes
+    
+    browsers.product(sizes).each { |browser, size| Iteration.new browser, size, configuration, &block }
     
     Comparison.new configuration
   end
