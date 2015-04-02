@@ -29,7 +29,7 @@ module Goggles
     end
 
     def find_comparable description
-      Dir.glob("#{directory}/*.png").sort.select { |img| img =~ /#{description}_/ }
+      Dir.glob("#{directory}/*.png").grep(/#{description}_/).sort
     end
 
     def find_common_width array
