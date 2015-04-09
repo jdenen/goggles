@@ -13,8 +13,6 @@ module Goggles
     browsers ||= configuration.browsers
     sizes    ||= configuration.sizes
     
-    ensure_directory
-    
     browsers.product(sizes).each do |browser, size|
       Iteration.new browser, size, configuration, &block 
     end
@@ -26,9 +24,5 @@ module Goggles
 
   def configuration
     @configuration ||= Configuration.new
-  end
-
-  def ensure_directory
-    FileUtils.mkdir_p configuration.directory
   end
 end

@@ -18,7 +18,6 @@ describe Goggles::Configuration do
     config.browsers << "chrome"
     config.sizes << 100
     config.groups << "foo"
-    config.directory = "/bar"
     config.color = "red"
     config.fuzzing = "10%"
 
@@ -26,9 +25,23 @@ describe Goggles::Configuration do
                         :browsers  => ["chrome"],
                         :sizes     => [100],
                         :groups    => ["foo"],
-                        :directory => "/bar",
                         :color     => "red",
                         :fuzzing   => "10%"
                       )
+  end
+
+  describe "#directory=" do
+    it "ensures the directory exists" do
+      expect(FileUtils).to receive(:mkdir_p).with "/foo/bar"
+      config.directory = "/foo/bar"
+      expect(config.directory).to eq "/foo/bar"
+    end
+
+    context "when attribute is empty" do
+      it "does not create the directory" do
+        expect(FileUtils).to_not receive(:mkdir_p)
+        config.directory = ""
+      end
+    end
   end
 end
