@@ -4,7 +4,12 @@ describe Goggles::Iteration do
   let(:watir) { instance_double("browser") }
 
   before do
-    allow(watir).to receive_messages(:driver => watir, :manage => watir, :window => watir)
+    allow(watir).to receive_messages(
+                      :driver => watir,
+                      :manage => watir,
+                      :window => watir,
+                      :goggles= => nil,
+                      :iteration= => nil)
     allow(watir).to receive(:resize_to)
   end
 
