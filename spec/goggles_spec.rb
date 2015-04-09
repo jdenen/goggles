@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Goggles do
+  before { allow(FileUtils).to receive(:mkdir_p) }
+  
   describe ".configure" do
     it "yields a configuration object" do
       expect { |b| Goggles.configure &b }.to yield_with_args Goggles::Configuration
