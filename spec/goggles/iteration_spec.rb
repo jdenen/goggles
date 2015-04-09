@@ -9,8 +9,9 @@ describe Goggles::Iteration do
                       :manage => watir,
                       :window => watir,
                       :goggles= => nil,
-                      :iteration= => nil)
-    allow(watir).to receive(:resize_to)
+                      :iteration= => nil,
+                      :resize_to => nil,
+                      :close => nil)
   end
 
   it "yields an instantiated browser" do

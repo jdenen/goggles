@@ -22,6 +22,7 @@ module Goggles
       @size         = width
       build_browser
       yield browser
+      browser.close
     end
 
     private
