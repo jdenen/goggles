@@ -2,7 +2,7 @@ require "image_size"
 
 module Goggles
   class Comparison
-    attr_reader :directory, :fuzzing, :color, :groups
+    attr_reader :directory, :fuzzing, :color, :groups, :results_dir
     
     def initialize config
       @directory = config.directory
@@ -28,6 +28,13 @@ module Goggles
       end
     end
 
+    def highlight_differences
+      groups.each do |desc|
+        ensure_result_directory desc
+        find_comparable(desc).combination(2).to_a.each { |imgs| diff imgs[0], imgs[1]  }
+      end
+    end
+
     def find_comparable description
       Dir.glob("#{directory}/*.png").grep(/#{description}_/).sort
     end
@@ -42,14 +49,28 @@ module Goggles
 
     private
 
+    attr_writer :results_dir
+
     def cut! images, sizes
       w = find_common_width sizes
       h = find_common_height sizes
       images.each { |img| `convert #{img} -background none -extent #{w}x#{h} #{img}` }
     end
 
+    def diff img_one, img_two
+      fuzz = "#{results_dir}/diff.png"
+      data = "#{results_dir}/data.txt"
+      `compare -fuzz #{fuzzing} -metric AE -highlight-color #{color} #{img_one} #{img_two} #{fuzz} 2>#{data}`
+    end
+
     def read_size file
       ImageSize.new(file.read).size
+    end
+
+    def ensure_result_directory description
+      self.results_dir = "#{directory}/#{description}"
+      FileUtils.rm_rf   results_dir
+      FileUtils.mkdir_p results_dir
     end
   end
 end

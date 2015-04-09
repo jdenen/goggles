@@ -63,6 +63,18 @@ describe Goggles::Comparison do
     end
   end
 
+  describe "#highlight_differences" do
+    it "diffs every combination of comparable screenshots" do
+      images = ["foo_1.png", "foo_2.png", "foo_3.png"]
+      expect(comparison).to receive(:groups).and_return ["foo"]
+      expect(comparison).to receive(:find_comparable).with("foo").and_return images
+      images.combination(2).to_a.each do |i|
+        expect(comparison).to receive(:diff).with i[0], i[1]
+      end
+      comparison.highlight_differences
+    end
+  end
+
   describe "#find_comparable" do
     it "returns an array of file paths" do
       array = ["/foo_chrome.png", "/bar_chrome.png", "/foo_ff.png", "/bar_ff.png"]
