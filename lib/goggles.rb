@@ -17,7 +17,7 @@ module Goggles
       Iteration.new browser, size, configuration, &block 
     end
     
-    Comparison.new configuration
+    Comparison.new(configuration).tap { |comparison| comparison.make! }
   end
 
   private

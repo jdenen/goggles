@@ -11,7 +11,7 @@ module Goggles
       @groups    = config.groups
     end
     
-    def make_comparison
+    def make!
       cut_to_common_size
       highlight_differences
     end

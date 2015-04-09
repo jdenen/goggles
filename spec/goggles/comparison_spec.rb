@@ -19,11 +19,11 @@ describe Goggles::Comparison do
     Goggles::Comparison.new config
   end
   
-  describe "#make_comparison" do
+  describe "#make!" do
     it "cuts images and highlights their differences" do
       expect(comparison).to receive(:cut_to_common_size)
       expect(comparison).to receive(:highlight_differences)
-      comparison.make_comparison
+      comparison.make!
     end
   end
 
