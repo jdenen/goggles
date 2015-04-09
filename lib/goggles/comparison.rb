@@ -58,9 +58,17 @@ module Goggles
     end
 
     def diff img_one, img_two
-      fuzz = "#{results_dir}/diff.png"
-      data = "#{results_dir}/data.txt"
+      b1 = diffed img_one
+      b2 = diffed img_two
+      
+      fuzz = "#{results_dir}/#{b1}_#{b2}_diff.png"
+      data = "#{results_dir}/#{b1}_#{b2}_data.txt"
+      
       `compare -fuzz #{fuzzing} -metric AE -highlight-color #{color} #{img_one} #{img_two} #{fuzz} 2>#{data}`
+    end
+
+    def diffed img
+      File.basename(img).match(/\d+_(.*)\.png/)[1]
     end
 
     def read_size file
