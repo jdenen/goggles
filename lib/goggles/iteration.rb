@@ -7,7 +7,7 @@ module Watir
     def grab_screenshot name
       description = "#{name}_#{iteration.size}"
       goggles.groups << description unless goggles.groups.include? description
-      screenshot.save "#{goggles.directory}/#{description}/#{iteration.browser_name}.png"
+      screenshot.save "#{goggles.directory}/#{description}_#{iteration.browser_name}.png"
     end
   end
 end
