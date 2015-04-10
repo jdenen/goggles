@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "goggles"
   spec.version       = Goggles::VERSION
   spec.authors       = ["Johnson Denen"]
-  spec.email         = ["jdenen@manta.com"]
-  spec.summary       = %q{comparing responsive screenshots under watir-webdriver}
-  spec.description   = %q{comparing responsive screenshots under watir-webdriver}
+  spec.email         = ["johnson.denen@gmail.com"]
+  spec.summary       = %q{Compare screenshots in different browers at differnt sizes}
+  spec.description   = %q{Compare screenshots in different browers at differnt sizes}
   spec.homepage      = "http://github.com/jdenen/goggles"
   spec.license       = "MIT"
 
