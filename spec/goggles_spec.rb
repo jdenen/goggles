@@ -1,41 +1,68 @@
 require "spec_helper"
 
 describe Goggles do
-  Given(:config_path) { "./spec/support/configs" }
-  Given(:images) { Dir.glob("./spec/support/results/*/*.png") }
-  Given(:diffs) { Dir.glob("./spec/support/results/*/*diff.png") }
-  Given(:datas) { Dir.glob("./spec/support/results/*/*data.txt") }
-
-  context "swimming with one script at multiple sizes" do
-    describe "taking screenshots" do
-      Given(:sizes_config) { "#{config_path}/test_config_1024_600.yml" }
-      When { Goggles.swim(sizes_config) }
-      Then { images.size.should == 6 }
-      And { diffs.size.should == 2 }
-      And { datas.size.should == 2 }
+  before { allow(FileUtils).to receive(:mkdir_p) }
+  
+  describe ".configure" do
+    it "yields a configuration object" do
+      expect { |b| Goggles.configure &b }.to yield_with_args Goggles::Configuration
     end
 
-    describe "generating error" do
-      Given(:no_shot_config) { "#{config_path}/test_config_no_screenshot.yml" }
-      Then { expect{ Goggles.swim(no_shot_config) }.to raise_error(Goggles::EmptyResultError) }
+    it "returns a configuration object" do
+      expect(Goggles.configure { "foo" }).to be_a Goggles::Configuration
+    end
+
+    it "memoizes the configuration object" do
+      expect(Goggles.configure { "foo" }).to equal Goggles.configure { "bar" }
     end
   end
 
-  context "swimming against multiple paths with no scripts" do
-    describe "taking screenshots when commanded" do
-      Given(:scriptless_config) { "#{config_path}/test_config_scriptless.yml" }
-      When { Goggles.swim(scriptless_config) }
-      Then { images.size.should == 6 }
-      And { diffs.size.should == 2 }
-      And { datas.size.should == 2 }
+  describe ".each" do
+    let(:config) do
+      Goggles.configure do |conf|
+        conf.browsers = [:foo]
+        conf.sizes    = [500]
+      end
+    end
+
+    before do
+      allow(config).to receive_messages(directory: "/dir", fuzzing: "20%", color: "blue", groups: [])
+    end
+    
+    it "passes browser, width, and configuration to an iteration object" do
+      expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
+      Goggles.each { "foo" }
+    end
+
+    it "accepts non-configured browser and size arguments" do
+      expect(Goggles::Iteration).to receive(:new).with(:bar, 300, config)
+      Goggles.each([:bar], [300]) { "foo" }
+    end
+    
+    it "returns a comparison object" do
+      expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
+      expect(Goggles.each { "foo" }).to be_a Goggles::Comparison
+    end
+
+    context "when configured for browsers at one size" do
+      it "creates an iteration for each browser with the width" do
+        config.browsers << :bar
+        [:foo, :bar].each { |browser| expect(Goggles::Iteration).to receive(:new).with browser, 500, config }
+        Goggles.each { "foo" }
+      end
+    end
+
+    context "when configured for browsers at different sizes" do
+      it "creates an iteration for every browser and width combination" do
+        config.browsers << :bar
+        config.sizes << 1000
+
+        [:foo, :bar].product([500, 1000]).each do |browser, width|
+          expect(Goggles::Iteration).to receive(:new).with browser, width, Object
+        end
+
+        Goggles.each { "foo" }
+      end
     end
   end
-
-  describe "creating empty configuration with --init" do
-    Given(:conf) { "spec/support/configs/empty_config.yml" }
-    Given { FileUtils.rm_f conf }
-    When { `swim -i #{conf}` }
-    Then { File.exists?(conf).should be_true }
-  end
-
 end

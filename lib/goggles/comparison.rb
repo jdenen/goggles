@@ -1,50 +1,84 @@
 require "image_size"
 
 module Goggles
-
-  def diff_images
-    images = Dir.glob("#{@gg_result_dir}/*/*.png").sort
-    raise Goggles::EmptyResultError, "No screenshots found in results directory: #{@gg_result_dir}" if images.empty?
-
-    size_to_smallest!
-
-    until images.empty?
-      one = images.slice!(0)
-      two = images.slice!(0)
-
-      out_path = one.gsub(/[^_]*$/, '')
-
-      diff_out = "#{out_path}diff.png"
-      data_out = "#{out_path}data.txt"
-
-      `compare -fuzz #{@gg_fuzz} -metric AE -highlight-color #{@gg_color} #{one} #{two} #{diff_out} 2>#{data_out}`
+  class Comparison
+    attr_reader :directory, :fuzzing, :color, :groups, :results_dir
+    
+    def initialize config
+      @directory = config.directory
+      @fuzzing   = config.fuzzing
+      @color     = config.color
+      @groups    = config.groups
     end
-  end
-
-  def size_to_smallest!
-    images = Dir.glob("#{@gg_result_dir}/*/*.png").sort
-
-    until images.empty?
-      pair = images.slice!(0..1)
-      widths = []
-      heights = []
-
-      File.open(pair[0], 'rb') do |one|
-        size = ImageSize.new(one.read).size
-        widths << size[0]
-        heights << size[1]
-
-        File.open(pair[1], 'rb') do |two|
-          size = ImageSize.new(two.read).size
-          widths << size[0]
-          heights << size[1]
-
-          pair.each do |file|
-            `convert #{file} -background none -extent #{widths.sort[0]}x#{heights.sort[0]} #{file}`
-          end
+    
+    def make!
+      cut_to_common_size
+      highlight_differences
+    end
+    
+    def cut_to_common_size
+      groups.each_with_object([]) do |group, sizes|
+        collection = find_comparable group
+        
+        collection.each do |img|
+          File.open(img, 'rb'){ |file| sizes << read_size(file) }
         end
+
+        cut! collection, sizes
       end
     end
-  end
 
+    def highlight_differences
+      groups.each do |desc|
+        ensure_result_directory desc
+        find_comparable(desc).combination(2).to_a.each { |imgs| diff imgs[0], imgs[1]  }
+      end
+    end
+
+    def find_comparable description
+      Dir.glob("#{directory}/*.png").grep(/#{description}_/).sort
+    end
+
+    def find_common_width array
+      array.collect(&:first).sort.first
+    end
+
+    def find_common_height array
+      array.collect(&:last).sort.first
+    end
+
+    private
+
+    attr_writer :results_dir
+
+    def cut! images, sizes
+      w = find_common_width sizes
+      h = find_common_height sizes
+      images.each { |img| `convert #{img} -background none -extent #{w}x#{h} #{img}` }
+    end
+
+    def diff img_one, img_two
+      b1 = diffed img_one
+      b2 = diffed img_two
+      
+      fuzz = "#{results_dir}/#{b1}_#{b2}_diff.png"
+      data = "#{results_dir}/#{b1}_#{b2}_data.txt"
+      
+      `compare -fuzz #{fuzzing} -metric AE -highlight-color #{color} #{img_one} #{img_two} #{fuzz} 2>#{data}`
+    end
+
+    def diffed img
+      File.basename(img).match(/\d+_(.*)\.png/)[1]
+    end
+
+    def read_size file
+      ImageSize.new(file.read).size
+    end
+
+    def ensure_result_directory description
+      self.results_dir = "#{directory}/#{description}"
+      FileUtils.rm_rf   results_dir
+      FileUtils.mkdir_p results_dir
+    end
+  end
 end

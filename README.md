@@ -1,14 +1,128 @@
 # goggles
 [![Gem Version](https://badge.fury.io/rb/goggles.png)](http://badge.fury.io/rb/goggles)
 
-Goggles is a visual testing tool inspired by [wraith](http://github.com/bbc-news/wraith) and powered by [watir-webdriver](http://github.com/watir/watir-webdriver). It allows you to compare screenshots of your web application in different browsers, and you can execute Ruby scripts to setup as many screenshots as you need.
+Goggles is a visual testing tool inspired by [wraith](http://github.com/bbc-news/wraith) and powered by [watir-webdriver](http://github.com/watir/watir-webdriver). It compares screenshots of your web applications in different browsers at differents sizes.
+
+## Usage
+
+### Configuration
+
+Configure Goggles with a block passed to the `Goggles.configure` method, which will yield a config object to your block for manipulation. The `directory` setting must be configured for Goggles to work. You'll also need to provide `browsers` and `sizes` that you'd like to compare, but those can be configured with the script.
+
+The `fuzzing` and `color` attributes default to "blue" and "20%" respectively. 
+
+```ruby
+Goggles.configure do |config|
+  config.directory = "/path/to/my/results"
+  config.browsers  = [:chrome, :firefox, :phantomjs]
+  config.sizes     = [1080, 600]
+  config.color     = "red"
+end
+```
+
+### Scripting
+
+Your Scripts are passed to `Goggles.each` as blocks. Goggles will iterate over the block with each combination of browser/browser size configured, and the method will yield a browser object to your script block.
+
+```ruby
+Goggles.each do |browser|
+  browser.goto "http://www.google.com"
+  browser.text_field(id: "lst-ib").value = "Google"
+end
+```
+
+#### Browsers and sizes
+
+You can pass additional browsers or browser sizes to `Goggles.each` as arrays. With version 0.8.0, these arguments will overwrite what you've configured through `Goggles.configure`.
+
+```ruby
+Goggles.each([:chrome, :firefox], [1080]) do |browser|
+  # ...
+end
+```
+
+**TODO**
+
+Before the 1.0.0 release, these arguments will act as additonal browsers/sizes to script against. That way, the base configuration can be extended for particular script instances.
+
+#### Screenshots
+
+Your script blocks should include the `Watir::Browser#grab_screenshot` method, which has been patched onto the browser objects yielded to your blocks. Simply give the method a description argument and the screenshot will be saved to your configured directory.
+
+```ruby
+Goggles.each do |browser|
+  browser.goto "http://www.google.com"
+  browser.grab_screenshot "homepage"
+end
+```
+
+#### Closing the browser
+
+There's no need to explicitly close the browser objects in your script blocks. Goggles will handle that.
+
+#### Results
+
+Screenshots are saved to your configured directory. Screenshot comparison results are saved to a sub-folder based on the screenshot description and browser size. Results include a diff image and data file.
+
+```ruby
+Goggles.configure do |c|
+  c.directory = "/goggles/results"
+  c.browsers  = [:chrome, :firefox, :phantomjs]
+  c.sizes     = [1080, 600]
+end
+
+Goggles.each do |browser|
+  browser.goto "http://www.google.com"
+  browser.grab_screenshot "google"
+end
+```
+
+
+```
+/goggles/results
+ |- google_1080_chrome.png
+ |- google_1080_firefox.png
+ |- google_1080_phantomjs.png
+ |- google_600_chrome.png
+ |- google_600_firefox.png
+ |- google_600_phantomjs.png
+ |- /google_1080
+     |- chrome_firefox_data.txt
+     |- chrome_firefox_diff.png
+     |- chrome_phantomjs_data.txt
+     |- chrome_phantomjs_diff.png
+     |- firefox_phantomjs_data.txt
+     |- firefox_phantomjs_diff.png
+ |- /google_600
+     |- chrome_firefox_data.txt
+     |- chrome_firefox_diff.png
+     |- chrome_phantomjs_data.txt
+     |- chrome_phantomjs_diff.png
+     |- firefox_phantomjs_data.txt
+     |- firefox_phantomjs_diff.png
+```
+
+## Road to 1.0.0
+
+I've made a lot of changes recently and bumped the version up to 0.8.0. Check the [/CHANGELOG.md](changelog) for more information about those changes.
+
+### v0.9.0
+
+* Browser/size arguments against `Goggles.each` extend configuration instead of overwriting it.
+* End-to-end Cucumber tests
+
+### v1.0.0
+
+* Documentation
+* Examples
+* TravisCI integration for specs (but not features)
 
 ## Installation
 
 Install ImageMagick:
 
 * OSX: `$ brew install imagemagick`
-* Linux: `$ sudo apt-get install imagemagick`
+* Ubuntu: `$ sudo apt-get install imagemagick`
 * Windows: [Download](http://www.imagemagick.org/script/binary-releases.php#windows) installer and add to your PATH.
 
 Add this line to your application's Gemfile:
@@ -23,76 +137,13 @@ Or install it yourself with:
 
     $ gem install goggles
 
-## Usage
-
-Generate a config file with `swim --init` to point goggles in the right direction.
-
-    $ swim -i /home/configs/config.yaml
-
-``` yaml
-# config.yaml
-# Directory where you want to store your results. Required.
-results_directory: "/home/example/results"
-
-# Directory where you're storing your scripts. Optional.
-scripts_directory: "/home/example/scripts"
-
-# Scripts to execute in the scripts directory. Optional.
-scripts_to_execute:
-  - "first_script.rb"
-  - "second_script.rb"
-
-# Domain to test. Required.
-domain_under_test: "http://www.google.com"
-
-# Paths to pages you want to test. Label them with a page name. Required.
-paths_to_capture: 
-  home: "/"
-  gmail: "/gmail"
-
-# Browsers you want to compare. Cannot specify more than two (yet). Required.
-browsers:
-  - "chrome"
-  - "firefox"
-
-# Widths at which you would like screenshots compared. All screenshots will be taken at a height of 768. Required.
-browser_widths:
-  - 1024
-
-# Fuzzing percentage. Play around with this to find the right fit. Required.
-image_fuzzing: "20%"
-
-# Color for diffing images. Defaults to blue. Optional.
-diff_color: "blue"
-```
-
-If you pass scripts to goggles as part of your testing, you **must** specify when screenshots should be taken with the `#grab_screenshot` method. If you do not specify scripts in configuration, goggles will open each of your paths and take a screenshot.
-
-NOTE: I've tried to keep variable names as unlikely to interrupt your code as possible, but `@watir` is reserved for the browser instance currently executing scripts.
-
-``` ruby
-# script_to_execute.rb
-require 'goggles'
-@watir.cookies.add("cookie_name", "cookie_value")
-
-# Pass a short description to the method for naming the resultant screenshot
-Goggles.grab_screenshot("with_cookie_set")
-```
-
-Execute a goggles test through the command line with `swim --config CONFIG_FILE` or use `swim --help` to see command options.
-
-    $ swim -c config.yml
-
 ## Contributing
 
 1. Fork it ( http://github.com/jdenen/goggles/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Code until specs pass (`rspec`)*
-4. Commit your changes (`git commit -am 'Add some feature'`)
-5. Push to the branch (`git push origin my-new-feature`)
-6. Create new Pull Request
-
-\*Chrome and [ChromeDriver](http://code.google.com/p/selenium/wiki/ChromeDriver) are required to pass specs. Download the latest version and add it to your PATH before running `rspec`.
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
 ## Questions, Comments, Concerns
-Easiest place to reach me is Twitter, [@jpdenen](http://twitter.com/jpdenen)
+Find me on Twitter ([@jpdenen](http://twitter.com/jpdenen)) or write up an issue.
