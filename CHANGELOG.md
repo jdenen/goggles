@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.8.1 (Apr 10, 2015)
+* Fix typo in gem description.
+
 ## v0.8.0 (Apr 10, 2015)
 * Remove `swim` executable.
 * Remove YAML configuration.
