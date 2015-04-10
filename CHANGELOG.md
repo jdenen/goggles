@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.8.2 (Apr 10, 2015)
+* Fix another typo in the gem description.
+
 ## v0.8.1 (Apr 10, 2015)
 * Fix typo in gem description.
 

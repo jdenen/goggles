@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Goggles::VERSION
   spec.authors       = ["Johnson Denen"]
   spec.email         = ["johnson.denen@gmail.com"]
-  spec.summary       = %q{Compare screenshots in different browers at different sizes}
-  spec.description   = %q{Compare screenshots in different browers at different sizes}
+  spec.summary       = %q{Compare screenshots in different browsers at different sizes}
+  spec.description   = %q{Compare screenshots in different browsers at different sizes}
   spec.homepage      = "http://github.com/jdenen/goggles"
   spec.license       = "MIT"
 
