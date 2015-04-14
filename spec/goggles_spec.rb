@@ -34,19 +34,36 @@ describe Goggles do
       Goggles.each { "foo" }
     end
 
-    context "when given a non-configured browser" do
-      it "iterates with configured and argument browsers" do
+    context "when given a browser argument" do
+      it "extends the configured browser list with the given browser" do
         expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
         expect(Goggles::Iteration).to receive(:new).with(:bar, 500, config)
         Goggles.each(:bar) { "foo" }
       end
+    end
 
-      context "and given a non-configured size" do
-        it "iterates over each configured and given combination" do
-          [:foo, :bar].product([500, 1000]).each do |b, s|
+    context "when given a size argument" do
+      it "extends the configured size list with the given size" do
+        expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
+        expect(Goggles::Iteration).to receive(:new).with(:foo, 250, config)
+        Goggles.each(250) { "foo" }
+      end      
+    end
+
+    context "when given multiple browser and size arguments" do
+      it "extends the configuration with the correct arguments" do
+        [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+          expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+        end
+        Goggles.each(:bar, :baz, 1000, 250) { "foo" }
+      end
+
+      context "in no particular order" do
+        it "extends the configuration with the correct arguments" do
+          [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
             expect(Goggles::Iteration).to receive(:new).with(b, s, config)
           end
-          Goggles.each(:bar, 1000) { "foo" }
+          Goggles.each(1000, :bar, :baz, 250) { "foo" }
         end
       end
     end
