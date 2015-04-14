@@ -36,7 +36,7 @@ end
 You can pass additional browsers or browser sizes to `Goggles.each` as arrays. With version 0.8.0, these arguments will overwrite what you've configured through `Goggles.configure`.
 
 ```ruby
-Goggles.each([:chrome, :firefox], [1080]) do |browser|
+Goggles.each(:chrome, :firefox, 500) do |browser|
   # ...
 end
 ```
@@ -100,7 +100,7 @@ end
 
 ## Road to 1.0.0
 
-I've made a lot of changes recently and bumped the version up to 0.9.0. Check the [CHANGELOG](CHANGELOG.md) for more information about those changes.
+I've made a lot of changes recently and bumped the version up to 0.9.1. Check the [CHANGELOG](CHANGELOG.md) for more information about those changes.
 
 ### v1.0.0
 
