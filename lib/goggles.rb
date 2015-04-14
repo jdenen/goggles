@@ -10,10 +10,12 @@ module Goggles
   end
 
   def each browsers = nil, sizes = nil, &block
-    browsers ||= configuration.browsers
-    sizes    ||= configuration.sizes
+    instance_config = configuration.dup.tap do |c|
+      c.browsers << browsers unless browsers.nil?
+      c.sizes << sizes unless sizes.nil?
+    end
     
-    browsers.product(sizes).each do |browser, size|
+    instance_config.browsers.product(instance_config.sizes).each do |browser, size|
       Iteration.new browser, size, configuration, &block 
     end
     
