@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.9.0 (Apr 14, 2015)
+* `Goggles.each` accepts Array, Integer, String, and Symbol arguments.
+* Arguments passed to `Goggles.each` extend configured settings instead of replacing them.
+* Add Cucumber tests.
+
 ## v0.8.2 (Apr 10, 2015)
 * Fix another typo in the gem description.
 
