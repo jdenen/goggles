@@ -9,8 +9,8 @@ module Goggles
     configuration.tap { |conf| yield conf }
   end
 
-  def each *args, &block
-    args.map!(&:to_s)
+  def each *instance, &block
+    args = instance.flatten.map(&:to_s)
     
     sizes = configuration.sizes + args.grep(/\d+/).map(&:to_i)
     browsers = configuration.browsers + args.grep(/[^\d+]/).map(&:to_sym)

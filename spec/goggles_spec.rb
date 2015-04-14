@@ -51,7 +51,7 @@ describe Goggles do
     end
 
     context "when given multiple browser and size arguments" do
-      it "extends the configuration with the correct arguments" do
+      it "extends the configuration with correctly" do
         [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
           expect(Goggles::Iteration).to receive(:new).with(b, s, config)
         end
@@ -65,6 +65,24 @@ describe Goggles do
           end
           Goggles.each(1000, :bar, :baz, 250) { "foo" }
         end
+      end
+    end
+
+    context "when given arguments in arrays" do
+      it "extends the configuration correctly" do
+        [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+          expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+        end
+        Goggles.each([:bar, :baz], [250, 1000]) { "foo" }
+      end
+    end
+
+    context "when given arguments of various classes" do
+      it "extends the configuration correctly" do
+        [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+          expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+        end
+        Goggles.each([:bar, "baz"], 250, "1000") { "foo" }
       end
     end
     
