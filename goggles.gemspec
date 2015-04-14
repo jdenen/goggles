@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "cucumber"
+  spec.add_development_dependency "yard"
 
   spec.add_runtime_dependency "watir-webdriver"
   spec.add_runtime_dependency "image_size"
