@@ -100,12 +100,7 @@ end
 
 ## Road to 1.0.0
 
-I've made a lot of changes recently and bumped the version up to 0.8.0. Check the [CHANGELOG](CHANGELOG.md) for more information about those changes.
-
-### v0.9.0
-
-* Browser/size arguments against `Goggles.each` extend configuration instead of overwriting it.
-* End-to-end Cucumber tests
+I've made a lot of changes recently and bumped the version up to 0.9.0. Check the [CHANGELOG](CHANGELOG.md) for more information about those changes.
 
 ### v1.0.0
 
