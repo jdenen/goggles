@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.9.1 (Apr 14, 2015)
+* Add YARD documentation.
+
 ## v0.9.0 (Apr 14, 2015)
 * `Goggles.each` accepts Array, Integer, String, and Symbol arguments.
 * Arguments passed to `Goggles.each` extend configured settings instead of replacing them.
