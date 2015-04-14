@@ -9,9 +9,11 @@ module Goggles
     configuration.tap { |conf| yield conf }
   end
 
-  def each browsers = nil, sizes = nil, &block
-    browsers ||= configuration.browsers
-    sizes    ||= configuration.sizes
+  def each *instance, &block
+    args = instance.flatten.map(&:to_s)
+    
+    sizes = configuration.sizes + args.grep(/\d+/).map(&:to_i)
+    browsers = configuration.browsers + args.grep(/[^\d+]/).map(&:to_sym)
     
     browsers.product(sizes).each do |browser, size|
       Iteration.new browser, size, configuration, &block 

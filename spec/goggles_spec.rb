@@ -34,9 +34,56 @@ describe Goggles do
       Goggles.each { "foo" }
     end
 
-    it "accepts non-configured browser and size arguments" do
-      expect(Goggles::Iteration).to receive(:new).with(:bar, 300, config)
-      Goggles.each([:bar], [300]) { "foo" }
+    context "when given a browser argument" do
+      it "extends the configured browser list with the given browser" do
+        expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
+        expect(Goggles::Iteration).to receive(:new).with(:bar, 500, config)
+        Goggles.each(:bar) { "foo" }
+      end
+    end
+
+    context "when given a size argument" do
+      it "extends the configured size list with the given size" do
+        expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
+        expect(Goggles::Iteration).to receive(:new).with(:foo, 250, config)
+        Goggles.each(250) { "foo" }
+      end      
+    end
+
+    context "when given multiple browser and size arguments" do
+      it "extends the configuration with correctly" do
+        [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+          expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+        end
+        Goggles.each(:bar, :baz, 1000, 250) { "foo" }
+      end
+
+      context "in no particular order" do
+        it "extends the configuration with the correct arguments" do
+          [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+            expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+          end
+          Goggles.each(1000, :bar, :baz, 250) { "foo" }
+        end
+      end
+    end
+
+    context "when given arguments in arrays" do
+      it "extends the configuration correctly" do
+        [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+          expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+        end
+        Goggles.each([:bar, :baz], [250, 1000]) { "foo" }
+      end
+    end
+
+    context "when given arguments of various classes" do
+      it "extends the configuration correctly" do
+        [:foo, :bar, :baz].product([500, 1000, 250]).each do |b, s|
+          expect(Goggles::Iteration).to receive(:new).with(b, s, config)
+        end
+        Goggles.each([:bar, "baz"], 250, "1000") { "foo" }
+      end
     end
     
     it "returns a comparison object" do

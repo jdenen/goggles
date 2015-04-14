@@ -41,10 +41,6 @@ Goggles.each([:chrome, :firefox], [1080]) do |browser|
 end
 ```
 
-**TODO**
-
-Before the 1.0.0 release, these arguments will act as additonal browsers/sizes to script against. That way, the base configuration can be extended for particular script instances.
-
 #### Screenshots
 
 Your script blocks should include the `Watir::Browser#grab_screenshot` method, which has been patched onto the browser objects yielded to your blocks. Simply give the method a description argument and the screenshot will be saved to your configured directory.
