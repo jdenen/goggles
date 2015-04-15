@@ -1,5 +1,6 @@
 # goggles
 [![Gem Version](https://badge.fury.io/rb/goggles.png)](http://badge.fury.io/rb/goggles)
+[![Build Status](https://travis-ci.org/jdenen/goggles.svg?branch=master)](https://travis-ci.org/jdenen/goggles)
 
 Goggles is a visual testing tool inspired by [wraith](http://github.com/bbc-news/wraith) and powered by [watir-webdriver](http://github.com/watir/watir-webdriver). It compares screenshots of your web applications in different browsers at differents sizes.
 
@@ -33,11 +34,23 @@ end
 
 #### Browsers and sizes
 
-You can pass additional browsers or browser sizes to `Goggles.each` as arrays. With version 0.8.0, these arguments will overwrite what you've configured through `Goggles.configure`.
+You can pass additional browsers or browser sizes to `Goggles.each` as arrays. These arguments extend your configuration for this instance's script block only.
 
 ```ruby
-Goggles.each(:chrome, :firefox, 500) do |browser|
-  # ...
+Goggles.configure do |c|
+  c.directory = "/some/directory"
+  c.browsers = [:chrome, :firefox]
+  c.sizes = [1080]
+end
+
+Goggles.each(:phantomjs, 500) do |browser|
+  # Script to be executed with Chrome, Firefox,
+  # and PhantomJS at widths of 1080 and 500.
+end
+
+Goggles.each do |browser|
+  # Script to be executed with Chrome and
+  # Firefox at a width of 1080.
 end
 ```
 
