@@ -14,14 +14,14 @@ When /^I extend configuration with arguments "(.*)"$/ do |args|
   @args = args.split(/,/).map(&:strip)
 end
 
-When /^I use the description "(.*)" in my script$/ do |desc|
+When /^I use "(.*)" to describe my screenshot of "(.*)"$/ do |desc, site|
   Goggles.each(@args) do |browser|
-    browser.goto "http://google.com"
+    browser.goto "http://#{site}"
     browser.grab_screenshot desc
   end
 end
 
-Then /^I have a file called "(.*)"$/ do |file|
+Then /^file "(.*)" exists$/ do |file|
   filepath = "#{@results}/#{file}"
   File.exists? filepath
 end
