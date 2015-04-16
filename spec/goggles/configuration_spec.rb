@@ -43,5 +43,12 @@ describe Goggles::Configuration do
         config.directory = ""
       end
     end
+
+    context "when attribute is nil" do
+      it "does not create the directory" do
+        expect(FileUtils).to_not receive(:mkdir_p)
+        config.directory = nil
+      end
+    end
   end
 end

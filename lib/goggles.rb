@@ -6,6 +6,11 @@ module Goggles
   extend self
 
   #
+  # Raise when the configuration attribute is unconfigured at runtime.
+  #
+  class EmptyDirectoryError < StandardError; end
+
+  #
   # Yields the global configuration object to a block.
   #
   # @yield  [Goggles::Configuration] global configuration
@@ -24,6 +29,7 @@ module Goggles
   # @see Goggles::Iteration
   #
   def each *instance, &block
+    validate_directory_setting
     args = instance.flatten.map(&:to_s)
     
     sizes = configuration.sizes + args.grep(/\d+/).map(&:to_i)
@@ -43,5 +49,14 @@ module Goggles
   #
   def configuration
     @configuration ||= Configuration.new
+  end
+
+  #
+  # @api private
+  #
+  def validate_directory_setting
+    message = "Expected configured directory setting, got: #{configuration.directory}"
+    raise EmptyDirectoryError, message if configuration.directory.nil?
+    raise EmptyDirectoryError, message if configuration.directory.empty?
   end
 end

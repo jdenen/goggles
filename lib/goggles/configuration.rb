@@ -31,7 +31,7 @@ module Goggles
     #
     def directory=(path)
       @directory = path
-      FileUtils.mkdir_p path unless path.empty?
+      FileUtils.mkdir_p path unless path.nil? or path.empty?
     end
   end
 end

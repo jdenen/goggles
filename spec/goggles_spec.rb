@@ -34,6 +34,24 @@ describe Goggles do
       Goggles.each { "foo" }
     end
 
+    context "when directory setting is nil" do
+      it "throws an EmptyDirectoryError" do
+        allow(config).to receive(:directory).and_return(nil)
+        expect do
+          Goggles.each { "foo" }
+        end.to raise_error(Goggles::EmptyDirectoryError)
+      end
+    end
+
+    context "when directory setting is empty" do
+      it "throws an EmptyDirectoryError" do
+        allow(config).to receive(:directory).and_return("")
+        expect do
+          Goggles.each { "foo" }
+        end.to raise_error(Goggles::EmptyDirectoryError)
+      end
+    end
+
     context "when given a browser argument" do
       it "extends the configured browser list with the given browser" do
         expect(Goggles::Iteration).to receive(:new).with(:foo, 500, config)
