@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.10.0 (Apr 16, 2015)
+* Throw EmptyDirectoryError on iteration with unconfigured directory setting.
+
 ## v0.9.1 (Apr 14, 2015)
 * Add YARD documentation.
 
