@@ -111,16 +111,6 @@ end
      |- firefox_phantomjs_diff.png
 ```
 
-## Road to 1.0.0
-
-I've made a lot of changes recently and bumped the version up to 0.9.1. Check the [CHANGELOG](CHANGELOG.md) for more information about those changes.
-
-### v1.0.0
-
-* Documentation
-* Examples
-* TravisCI integration for specs (but not features)
-
 ## Installation
 
 Install ImageMagick:
