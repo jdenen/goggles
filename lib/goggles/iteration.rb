@@ -1,25 +1,30 @@
 require "watir-webdriver"
 
-module Watir
-  class Browser
-    attr_accessor :goggles, :iteration
+module Goggles
 
-    #
-    # Saves a screenshot as "given-description_width.png" in the configured results
-    #  directory.
-    #
-    # @param name [String] screenshot description
-    # @return [nil]
-    #
-    def grab_screenshot name
-      description = "#{name}_#{iteration.size}"
-      goggles.groups << description unless goggles.groups.include? description
-      screenshot.save "#{goggles.directory}/#{description}_#{iteration.browser_name}.png"
+  #
+  # Refines Watir::Browser#screenshot and attaches Goggles specific attributes.
+  #
+  # @see Watir::Browser
+  #
+  module Browser
+    refine Watir::Browser do
+      attr_accessor :goggles, :iteration
+
+      #
+      # Saves a screenshot as "given-description_width.png" in the configured results
+      #  directory.
+      #
+      # @param name [String] screenshot description
+      # @return [nil]
+      #
+      def screenshot name
+        description = "#{name}_#{iteration.size}"
+        goggles.groups << description unless goggles.groups.include? description
+        super.save "#{goggles.directory}/#{description}_#{iteration.browser_name}.png"
+      end
     end
   end
-end
-
-module Goggles
 
   #
   # Executes the block passed to `Goggles.each` with every configured combination of browser
@@ -28,6 +33,8 @@ module Goggles
   # @see Goggles.each
   #
   class Iteration
+    include Browser
+    
     attr_reader :browser, :browser_name, :size, :config
 
     #
